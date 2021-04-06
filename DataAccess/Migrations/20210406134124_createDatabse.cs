@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccess.Migrations
 {
-    public partial class createDatabase : Migration
+    public partial class createDatabse : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,7 +42,7 @@ namespace DataAccess.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OwnerFullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Age = table.Column<byte>(type: "tinyint", nullable: false),
-                    Genre = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -122,6 +122,90 @@ namespace DataAccess.Migrations
                         principalTable: "Hamsters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Activities",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Arrived" },
+                    { 2, "Exercise" },
+                    { 3, "Cage" },
+                    { 4, "Left" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AreaTypes",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Cage" },
+                    { 2, "Exercise" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Hamsters",
+                columns: new[] { "Id", "Age", "Gender", "Name", "OwnerFullName" },
+                values: new object[,]
+                {
+                    { 18, (byte)20, "K", "Amber", "Kim Carnes" },
+                    { 19, (byte)19, "M", "Kimber", "Mork of Ork" },
+                    { 20, (byte)18, "K", "Ruby", "Mindy Mendel" },
+                    { 21, (byte)16, "K", "Fiffi", "GW Hansson" },
+                    { 22, (byte)16, "K", "Neko", "Pia Hansson" },
+                    { 23, (byte)15, "M", "Clint", "Bo Ek" },
+                    { 26, (byte)110, "M", "Crawler", "Carita Gran" },
+                    { 25, (byte)12, "K", "Gittan", "Hans Björk" },
+                    { 17, (byte)21, "K", "Robin", "Bette Davis" },
+                    { 27, (byte)9, "K", "Mimmi", "Mia Eriksson" },
+                    { 28, (byte)8, "M", "Marvel", "Anna Linström" },
+                    { 29, (byte)7, "M", "Storm", "Lennart Berg" },
+                    { 30, (byte)6, "K", "Busan", "Bo Bergman" },
+                    { 24, (byte)14, "M", "Sauron", "Anna Al" },
+                    { 16, (byte)22, "K", "Bobo", "Hedy Lamar" },
+                    { 13, (byte)3, "K", "Malin", "Bianca Ingrosso" },
+                    { 14, (byte)24, "M", "Bulle", "Lorenzo Lamas" },
+                    { 12, (byte)3, "M", "Chivas", "Pernilla Wahlgren" },
+                    { 11, (byte)4, "K", "Starlight", "Anna Book" },
+                    { 10, (byte)4, "M", "Kurt", "Anna Book" },
+                    { 9, (byte)5, "M", "Kalle", "Anfers Murkwood" },
+                    { 8, (byte)6, "K", "Miss Diggy", "Ottilla Murkwood" },
+                    { 7, (byte)7, "K", "Mulan", "Jan Hallgren" },
+                    { 6, (byte)8, "K", "Sussi", "Lisa Nilsson" },
+                    { 5, (byte)9, "M", "Sneaky", "Lisa Nilsson" },
+                    { 4, (byte)10, "M", "Nibbler", "Carl Hamilton" },
+                    { 3, (byte)11, "M", "Fluff", "Carl Hamilton" },
+                    { 2, (byte)12, "K", "Lisa", "Kallegurra Aktersnurra" },
+                    { 1, (byte)4, "M", "Rufus", "Kallegurra Aktersnurra" },
+                    { 15, (byte)23, "M", "Beppe", "Bobby Ewing" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Statuses",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Available" },
+                    { 2, "Unavailable" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Areas",
+                columns: new[] { "Id", "AreaTypeId", "Capacity", "StatusId" },
+                values: new object[,]
+                {
+                    { 1, 1, 3, 1 },
+                    { 2, 1, 3, 1 },
+                    { 3, 1, 3, 1 },
+                    { 4, 1, 3, 1 },
+                    { 5, 1, 3, 1 },
+                    { 6, 1, 3, 1 },
+                    { 7, 1, 3, 1 },
+                    { 8, 1, 3, 1 },
+                    { 9, 1, 3, 1 },
+                    { 10, 1, 3, 1 },
+                    { 11, 2, 6, 1 }
                 });
 
             migrationBuilder.CreateIndex(
