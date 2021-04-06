@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Business;
+using Business.Service;
+using System;
 
 namespace ConsoleUI
 {
@@ -6,7 +8,7 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Tick tick = new Tick(1, 3);
         }
     }
 }
