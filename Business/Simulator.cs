@@ -138,6 +138,44 @@ namespace Business
                 MoveHamster(hamster, activityLogs[i], ActivityEnum.Exercise, AreaType.Exercise);
             }
         }
+        public void DailyReport()
+        {
+            if (Tick.simulatorDate.Hour == 17)
+            {
+                var hamsters = hamsterService.GetAll();
+                TimeSpan totalTime = new TimeSpan();
+                Console.WriteLine("Report from {0}",Tick.simulatorDate.Date);
+                Console.WriteLine("---------------------------------&&&&&---------------------------------");
+                foreach (var hamster in hamsters)
+                {
+                    var result = hamster.ActivityLogs
+                                .Where(x => x.StartTime.Value.Day == Tick.simulatorDate.Day && x.ActivityId != 1 && x.ActivityId != 4)
+                                .Select(x => new { ActivityId = x.ActivityId, TotalTime = (x.EndTime - x.StartTime) })
+                                .GroupBy(x => new { x.ActivityId }).ToList();
+
+                    Console.WriteLine("Id: {0} / Hamster Name: {1} / Owner Name: {2}", hamster.Id, hamster.Name, hamster.OwnerFullName);
+
+                    foreach (var activity in result)
+                    {
+                        Console.WriteLine("  ---Activity Name: {0}", (ActivityEnum)Enum.ToObject(typeof(ActivityEnum), activity.Key.ActivityId));
+
+                        foreach (var activityTime in activity)
+                        {
+                            totalTime = (TimeSpan)(totalTime + activityTime.TotalTime);
+                        }
+                        Console.WriteLine("    --Total time spent during activity: {0}", totalTime);
+                        totalTime = new TimeSpan();
+
+                    }
+                    var totalExercise = hamster.ActivityLogs.Where(x => x.ActivityId == (int)ActivityEnum.Exercise && x.StartTime.Value.Day == Tick.simulatorDate.Day);
+
+                    Console.WriteLine("    --Total exercise: {0}", totalExercise.Count());
+
+                    Console.WriteLine("---------------------------------&&&&&---------------------------------");
+                };
+                Console.ReadLine();
+            };
+        }
         public int GetAreaId(Hamster hamster, AreaType areaType)
         {
             var areas = areaService.GetByAreaType((int)areaType);
@@ -158,7 +196,7 @@ namespace Business
         }
         public void ChangeAreaStatus(int areaId)
         {
-            var area = areaService.GetById(a=>a.Id == areaId);
+            var area = areaService.GetById(a => a.Id == areaId);
             if (area.ActivityLogs.Select(a => a.EndTime == null).Count() == area.Capacity)
             {
                 area.StatusId = (int)Status.Unavailable;

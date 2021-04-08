@@ -31,7 +31,7 @@ namespace DataAccess.EntityFramework
         {
             using (advYumitGyulerContext context = new advYumitGyulerContext())
             {
-                return context.ActivityLogs.Where(filter).ToList();
+                return context.ActivityLogs.Include("Hamster").Where(filter).ToList();
             }
         }
     }
