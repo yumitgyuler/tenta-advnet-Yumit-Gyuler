@@ -12,10 +12,12 @@ namespace DataAccess.ImportContext
                 new Activity { Id = 1, Name = "Arrived" },
                 new Activity { Id = 2, Name = "Exercise" },
                 new Activity { Id = 3, Name = "Cage" },
-                new Activity { Id = 4, Name = "Left" });
+                new Activity { Id = 4, Name = "Left" },
+                new Activity { Id = 5, Name = "Spa" });
             modelBuilder.Entity<AreaType>().HasData(
                 new AreaType { Id = 1, Name = "Cage" },
-                new AreaType { Id = 2, Name = "Exercise" });
+                new AreaType { Id = 2, Name = "Exercise" },
+                new AreaType { Id = 3, Name = "Spa" });
             modelBuilder.Entity<Status>().HasData(
                 new Status { Id = 1, Name = "Available" },
                 new Status { Id = 2, Name = "Unavailable" });
@@ -30,7 +32,8 @@ namespace DataAccess.ImportContext
                 new Area { Id = 8, AreaTypeId = 1, StatusId = 1, Capacity = 3 },
                 new Area { Id = 9, AreaTypeId = 1, StatusId = 1, Capacity = 3 },
                 new Area { Id = 10, AreaTypeId = 1, StatusId = 1, Capacity = 3 },
-                new Area { Id = 11, AreaTypeId = 2, StatusId = 1, Capacity = 6 }
+                new Area { Id = 11, AreaTypeId = 2, StatusId = 1, Capacity = 6 },
+                new Area { Id = 12, AreaTypeId = 3, StatusId = 1, Capacity = 4 }
                 );
         }
     }
