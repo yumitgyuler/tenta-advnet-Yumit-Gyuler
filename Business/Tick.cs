@@ -47,20 +47,19 @@ namespace Business
         }
         private void OnTimerEvent()
         {
-
             Task t4 = Task.Run(() => simulator.CheckIn());
             t4.Wait();
 
             if (simulatorDate.Hour != 17)
             {
                 Task t2 = Task.Run(() => simulator.CheckHamsterOnExerciseArea());
+                Task t5 = Task.Run(() => simulator.CheckHamsterOnSpaArea());
                 Task t1 = Task.Run(() => simulator.CheckHamsterOnCageArea());
-                Task.WaitAll(t2, t1);
-
+                Task.WaitAll(t2, t5, t1);
             }
             Task t3 = Task.Run(() => simulator.CheckOut()).ContinueWith(task => { simulator.DailyReport(); });
-            
-            Task.WaitAll(t3);
+
+            t3.Wait();
         }
         private DateTime GetDateTime()
         {

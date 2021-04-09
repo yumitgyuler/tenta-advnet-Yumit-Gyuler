@@ -7,15 +7,19 @@ namespace Business
 {
     public enum ActivityType
     {
+        Null = 0,
         Arrived = 1,
         Exercise = 2,
         Cage = 3,
-        Left = 4
+        Left = 4,
+        Spa = 5
     }
     public enum AreaType
     {
+        Null = 0,
         Cage = 1,
-        Exercise = 2
+        Exercise = 2,
+        Spa = 3
     }
     public enum Status
     {
@@ -87,7 +91,7 @@ namespace Business
                 }
             }
         }
-        public void MoveHamster(Hamster hamster, ActivityLog activityLog, ActivityType activityEnum, AreaType areaType)
+        public void MoveHamster(Hamster hamster, ActivityLog activityLog, ActivityType activityType, AreaType areaType)
         {
             int areaId = GetAreaId(hamster, areaType);
             if (areaId != 0)
@@ -100,7 +104,7 @@ namespace Business
                   new ActivityLog
                   {
                       HamsterId = hamster.Id,
-                      ActivityId = (int)activityEnum,
+                      ActivityId = (int)activityType,
                       AreaId = areaId,
                       StartTime = Tick.simulatorDate,
                   });
@@ -120,7 +124,7 @@ namespace Business
                 if ((Tick.simulatorDate.TimeOfDay - startTime.Value.TimeOfDay).TotalMinutes > 60)
                 {
                     Hamster hamster = hamsterService.GetById(activityLog.HamsterId);
-                    MoveHamster(hamster, activityLog, ActivityType.Cage, AreaType.Cage);
+                    MoveHamster(hamster, activityLog, ActivityType.Spa, AreaType.Spa);
                 }
             }
         }
@@ -136,6 +140,22 @@ namespace Business
             {
                 Hamster hamster = hamsterService.GetById(activityLogs[i].HamsterId);
                 MoveHamster(hamster, activityLogs[i], ActivityType.Exercise, AreaType.Exercise);
+            }
+        }
+        public void CheckHamsterOnSpaArea()
+        {
+            var activityLogs = activityLogService
+                .GetById(a => a.ActivityId == (int)ActivityType.Spa)
+                .Where(e => e.EndTime == null);
+
+            foreach (var activityLog in activityLogs)
+            {
+                var startTime = activityLog.StartTime;
+                if ((Tick.simulatorDate.TimeOfDay - startTime.Value.TimeOfDay).TotalMinutes > 10)
+                {
+                    Hamster hamster = hamsterService.GetById(activityLog.HamsterId);
+                    MoveHamster(hamster, activityLog, ActivityType.Cage, AreaType.Cage);
+                }
             }
         }
         public void DailyReport()
@@ -168,8 +188,10 @@ namespace Business
 
                     }
                     var totalExercise = hamster.ActivityLogs.Where(x => x.ActivityId == (int)ActivityType.Exercise && x.StartTime.Value.Day == Tick.simulatorDate.Day);
+                    var totalSpa = hamster.ActivityLogs.Where(x => x.ActivityId == (int)ActivityType.Spa && x.StartTime.Value.Day == Tick.simulatorDate.Day);
 
                     Console.WriteLine("    --Total exercise: {0}", totalExercise.Count());
+                    Console.WriteLine("    --Total Spa: {0}", totalSpa.Count());
 
                     Console.WriteLine("---------------------------------&&&&&---------------------------------");
                 };
