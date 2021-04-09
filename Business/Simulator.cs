@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Business
 {
-    public enum ActivityEnum
+    public enum ActivityType
     {
         Arrived = 1,
         Exercise = 2,
@@ -41,7 +41,7 @@ namespace Business
                             new ActivityLog
                             {
                                 HamsterId = hamster.Id,
-                                ActivityId = (int)ActivityEnum.Arrived,
+                                ActivityId = (int)ActivityType.Arrived,
                                 StartTime = Tick.simulatorDate,
                                 EndTime = Tick.simulatorDate
                             });
@@ -50,7 +50,7 @@ namespace Business
                             new ActivityLog
                             {
                                 HamsterId = hamster.Id,
-                                ActivityId = (int)ActivityEnum.Cage,
+                                ActivityId = (int)ActivityType.Cage,
                                 AreaId = areaId,
                                 StartTime = Tick.simulatorDate
                             });
@@ -74,7 +74,7 @@ namespace Business
                             new ActivityLog
                             {
                                 HamsterId = hamster.Id,
-                                ActivityId = (int)ActivityEnum.Left,
+                                ActivityId = (int)ActivityType.Left,
                                 StartTime = Tick.simulatorDate,
                                 EndTime = Tick.simulatorDate
                             });
@@ -87,7 +87,7 @@ namespace Business
                 }
             }
         }
-        public void MoveHamster(Hamster hamster, ActivityLog activityLog, ActivityEnum activityEnum, AreaType areaType)
+        public void MoveHamster(Hamster hamster, ActivityLog activityLog, ActivityType activityEnum, AreaType areaType)
         {
             int areaId = GetAreaId(hamster, areaType);
             if (areaId != 0)
@@ -111,7 +111,7 @@ namespace Business
         public void CheckHamsterOnExerciseArea()
         {
             var activityLogs = activityLogService
-                .GetById(a => a.ActivityId == (int)ActivityEnum.Exercise)
+                .GetById(a => a.ActivityId == (int)ActivityType.Exercise)
                 .Where(e => e.EndTime == null);
 
             foreach (var activityLog in activityLogs)
@@ -120,14 +120,14 @@ namespace Business
                 if ((Tick.simulatorDate.TimeOfDay - startTime.Value.TimeOfDay).TotalMinutes > 60)
                 {
                     Hamster hamster = hamsterService.GetById(activityLog.HamsterId);
-                    MoveHamster(hamster, activityLog, ActivityEnum.Cage, AreaType.Cage);
+                    MoveHamster(hamster, activityLog, ActivityType.Cage, AreaType.Cage);
                 }
             }
         }
         public void CheckHamsterOnCageArea()
         {
             var activityLogs = activityLogService
-                .GetById(a => a.ActivityId == (int)ActivityEnum.Cage)
+                .GetById(a => a.ActivityId == (int)ActivityType.Cage)
                 .Where(e => e.EndTime == null).OrderBy(s => s.StartTime).ToList();
 
             int capacity = areaService.GetById(a => a.AreaTypeId == (int)AreaType.Exercise).Capacity;
@@ -135,7 +135,7 @@ namespace Business
             for (int i = 0; i < capacity; i++)
             {
                 Hamster hamster = hamsterService.GetById(activityLogs[i].HamsterId);
-                MoveHamster(hamster, activityLogs[i], ActivityEnum.Exercise, AreaType.Exercise);
+                MoveHamster(hamster, activityLogs[i], ActivityType.Exercise, AreaType.Exercise);
             }
         }
         public void DailyReport()
@@ -157,7 +157,7 @@ namespace Business
 
                     foreach (var activity in result)
                     {
-                        Console.WriteLine("  ---Activity Name: {0}", (ActivityEnum)Enum.ToObject(typeof(ActivityEnum), activity.Key.ActivityId));
+                        Console.WriteLine("  ---Activity Name: {0}", (ActivityType)Enum.ToObject(typeof(ActivityType), activity.Key.ActivityId));
 
                         foreach (var activityTime in activity)
                         {
@@ -167,7 +167,7 @@ namespace Business
                         totalTime = new TimeSpan();
 
                     }
-                    var totalExercise = hamster.ActivityLogs.Where(x => x.ActivityId == (int)ActivityEnum.Exercise && x.StartTime.Value.Day == Tick.simulatorDate.Day);
+                    var totalExercise = hamster.ActivityLogs.Where(x => x.ActivityId == (int)ActivityType.Exercise && x.StartTime.Value.Day == Tick.simulatorDate.Day);
 
                     Console.WriteLine("    --Total exercise: {0}", totalExercise.Count());
 

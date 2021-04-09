@@ -65,7 +65,7 @@ namespace Business
         private DateTime GetDateTime()
         {
             ActivityLogService activityLogService = new ActivityLogService();
-            var activityLogs = activityLogService.GetById(a => a.ActivityId == (int)ActivityEnum.Arrived).OrderBy(x=>x.StartTime).ToList();
+            var activityLogs = activityLogService.GetById(a => a.ActivityId == (int)ActivityType.Arrived).OrderBy(x=>x.StartTime).ToList();
             if (activityLogs.Count == 0)
             {
                 return new DateTime(2022, 01, 01, 07, 00, 00);
